@@ -19,14 +19,15 @@ export const useAuthStore = defineStore('auth', () => {
         response = await validateToken(storedToken)
       } else if (key) {
         response = await validateKey(key)
-        if (response.valid && response.token) {
-          localStorage.setItem('tmp_auth_token', response.token)
+        console.log('Stored token:', response)
+        if (response.success && response.data) {
+          localStorage.setItem('tmp_auth_token', response.data)
         }
       } else {
         throw new Error('No authentication credentials provided')
       }
 
-      isAuthenticated.value = response.valid
+      isAuthenticated.value = response.success
       errorMessage.value = response.message
     } catch (error) {
       isAuthenticated.value = false

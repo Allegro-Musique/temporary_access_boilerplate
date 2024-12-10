@@ -1,7 +1,7 @@
 export interface ValidationResponse {
-  valid: boolean
+  success: boolean
   message?: string
-  token?: string
+  data?: string
 }
 
 export interface ApiError {
