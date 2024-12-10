@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '../stores/auth'
 import { useUploadStore } from '../stores/upload'
@@ -8,7 +8,7 @@ import AccessDenied from '../components/AccessDenied.vue'
 import UploadContent from '../components/UploadContent.vue'
 
 const route = useRoute()
-const router = useRouter()
+
 const authStore = useAuthStore()
 const uploadStore = useUploadStore()
 

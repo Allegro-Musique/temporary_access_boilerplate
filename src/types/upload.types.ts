@@ -1,5 +1,5 @@
 export interface UploadSettings {
-  compression: 'high' | 'medium' | 'low' | 'none'
+  compression: 'high' | 'medium' | 'low' | 'none' | null
   visibility: 'private' | 'public' | 'password'
   expiryDays: number
   password?: string

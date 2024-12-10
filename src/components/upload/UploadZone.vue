@@ -12,7 +12,7 @@ const emit = defineEmits<{
 
 const dropZoneRef = ref<HTMLDivElement>()
 const { isOverDropZone } = useDropZone(dropZoneRef, {
-  onDrop: (files) => handleFiles(Array.from(files))
+  onDrop: (files) => handleFiles(Array.from(files || []))  // Ensures null safety
 })
 
 const handleFiles = (files: File[]) => {
@@ -57,11 +57,11 @@ const triggerFileInput = () => {
     </div>
 
     <!-- Selected Files -->
-    <div v-if="selectedFiles.length > 0" class="mt-6">
+    <div v-if="props.selectedFiles.length > 0" class="mt-6">
       <h3 class="text-sm font-medium text-allegro_blue_darker mb-3">Fichiers Sélectionnés</h3>
       <ul class="space-y-2">
         <li 
-          v-for="file in selectedFiles" 
+          v-for="file in props.selectedFiles" 
           :key="file.name"
           class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
         >

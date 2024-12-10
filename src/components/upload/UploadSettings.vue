@@ -1,29 +1,45 @@
 <script setup lang="ts">
-import type { UploadSettings } from '../../types/upload.types'
+import type { UploadSettings } from "../../types/upload.types";
 
 const props = defineProps<{
-  modelValue: UploadSettings
-}>()
+  modelValue: UploadSettings;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: UploadSettings): void
-}>()
+  (e: "update:modelValue", value: UploadSettings): void;
+}>();
 
 const updateSetting = <K extends keyof UploadSettings>(
   key: K,
   value: UploadSettings[K]
 ) => {
-  emit('update:modelValue', {
+  emit("update:modelValue", {
     ...props.modelValue,
     [key]: value,
-  })
-}
+  });
+};
+
+
+const handleEvent = <K extends keyof UploadSettings>(
+  key: K,
+  event: Event,
+  type: 'value' | 'checked'
+) => {
+  const target = event.target as HTMLInputElement | HTMLSelectElement | null;
+  if (target) {
+    const value = type === 'checked' ? (target as HTMLInputElement).checked : target.value;
+    updateSetting(key, value as UploadSettings[K]);
+  }
+};
+
 </script>
 
 <template>
   <div class="bg-white p-6 rounded-lg shadow-md">
-    <h3 class="text-lg font-medium text-allegro_blue_darker mb-4">Paramètres de Téléversement</h3>
-    
+    <h3 class="text-lg font-medium text-allegro_blue_darker mb-4">
+      Paramètres de Téléversement
+    </h3>
+
     <div class="space-y-6">
       <!-- Compression -->
       <div>
@@ -32,7 +48,7 @@ const updateSetting = <K extends keyof UploadSettings>(
         </label>
         <select
           v-model="modelValue.compression"
-          @change="updateSetting('compression', $event.target.value)"
+          @change="handleEvent('compression', $event, 'value')"
           class="w-full rounded-md border-allegro_gray/30 focus:border-allegro_blue focus:ring focus:ring-allegro_blue/20"
         >
           <option value="high">Compression Élevée</option>
@@ -49,7 +65,7 @@ const updateSetting = <K extends keyof UploadSettings>(
         </label>
         <select
           v-model="modelValue.visibility"
-          @change="updateSetting('visibility', $event.target.value)"
+          @change="handleEvent('visibility', $event, 'value')"
           class="w-full rounded-md border-allegro_gray/30 focus:border-allegro_blue focus:ring focus:ring-allegro_blue/20"
         >
           <option value="private">Privé</option>
@@ -66,7 +82,7 @@ const updateSetting = <K extends keyof UploadSettings>(
         <input
           type="password"
           v-model="modelValue.password"
-          @input="updateSetting('password', $event.target.value)"
+          @input="handleEvent('password', $event, 'value')"
           class="w-full rounded-md border-allegro_gray/30 focus:border-allegro_blue focus:ring focus:ring-allegro_blue/20"
           placeholder="Entrez le mot de passe"
         />
@@ -80,7 +96,7 @@ const updateSetting = <K extends keyof UploadSettings>(
         <input
           type="number"
           v-model="modelValue.expiryDays"
-          @input="updateSetting('expiryDays', parseInt($event.target.value))"
+          @input="handleEvent('expiryDays', $event, 'value')"
           class="w-full rounded-md border-allegro_gray/30 focus:border-allegro_blue focus:ring focus:ring-allegro_blue/20"
           min="1"
           max="30"
@@ -93,7 +109,7 @@ const updateSetting = <K extends keyof UploadSettings>(
           <input
             type="checkbox"
             v-model="modelValue.allowDownloads"
-            @change="updateSetting('allowDownloads', $event.target.checked)"
+            @change="handleEvent('allowDownloads', $event, 'checked')"
             class="rounded border-allegro_gray/30 text-allegro_blue focus:ring-allegro_blue"
           />
           <label class="ml-2 text-sm text-allegro_gray">
@@ -105,7 +121,7 @@ const updateSetting = <K extends keyof UploadSettings>(
           <input
             type="checkbox"
             v-model="modelValue.notifyOnDownload"
-            @change="updateSetting('notifyOnDownload', $event.target.checked)"
+            @change="handleEvent('notifyOnDownload', $event, 'checked')"
             class="rounded border-allegro_gray/30 text-allegro_blue focus:ring-allegro_blue"
           />
           <label class="ml-2 text-sm text-allegro_gray">
@@ -122,7 +138,7 @@ const updateSetting = <K extends keyof UploadSettings>(
         <input
           type="number"
           v-model="modelValue.maxDownloads"
-          @input="updateSetting('maxDownloads', parseInt($event.target.value))"
+          @input="handleEvent('maxDownloads', $event, 'value')"
           class="w-full rounded-md border-allegro_gray/30 focus:border-allegro_blue focus:ring focus:ring-allegro_blue/20"
           min="1"
           max="100"
