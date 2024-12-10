@@ -27,7 +27,7 @@ export const validateAccessKey = async (key: string): Promise<ValidationResponse
     }
 
     return {
-      valid: false,
+      success: false,
       message: apiError.message
     }
   }
