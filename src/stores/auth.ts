@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { validateKey } from '../api/auth'
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false)
@@ -9,6 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
   const checkAuthentication = async (key?: string): Promise<boolean> => {
     isLoading.value = true
     errorMessage.value = undefined
+  
     localStorage.removeItem('tmp_auth_token')
     localStorage.removeItem('tmp_auth_to')
 

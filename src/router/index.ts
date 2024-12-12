@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteLocationNormalizedLoaded, NavigationGuardNext } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import Upload from '../views/Upload.vue'
 import AccessDenied from '../views/AccessDenied.vue'
@@ -38,9 +38,11 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async (to, next) => {
+router.beforeEach(async (to: RouteLocationNormalizedLoaded, from: RouteLocationNormalizedLoaded, next: NavigationGuardNext) => {
   const authStore = useAuthStore()
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  console.log(`Navigating from ${from.path} to ${to.path}`);
 
   if (requiresAuth) {
     const key = to.query.key as string
