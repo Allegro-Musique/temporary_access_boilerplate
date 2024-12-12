@@ -1,35 +1,12 @@
 import { createRouter, createWebHistory, RouteLocationNormalizedLoaded, NavigationGuardNext } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import Upload from '../views/Upload.vue'
-import AccessDenied from '../views/AccessDenied.vue'
-import NotFound from '../views/NotFound.vue'
-import TeacherRegistration from '../views/TeacherRegistration.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: '/upload'
-  },
-  {
-    path: '/upload',
-    name: 'upload',
-    component: Upload,
+    name: 'home',
+    component: { template: '<div>Home</div>' },
     meta: { requiresAuth: true }
-  },
-  {
-    path: '/access-denied',
-    name: 'access-denied',
-    component: AccessDenied
-  },
-  {
-    path: '/teacher-registration',
-    name: 'teacher-registration',
-    component: TeacherRegistration
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'not-found',
-    component: NotFound
   }
 ]
 
@@ -48,13 +25,11 @@ router.beforeEach(async (to: RouteLocationNormalizedLoaded, from: RouteLocationN
     const key = to.query.key as string
     const isAuthenticated = await authStore.checkAuthentication(key)
     if (!isAuthenticated) {
-      next({ name: 'access-denied' }) // Redirect to Access Denied page if authentication fails
-    } else {
-      next()
+      next({ path: '/', query: { from: from.path } }) // Store the origin path
+      return
     }
-  } else {
-    next()
   }
+  next()
 })
 
 export default router
