@@ -5,38 +5,36 @@ import type { ValidationResponse } from '../types/api.types'
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false)
-  const isLoading = ref(true)
+  const isLoading = ref(false)
   const errorMessage = ref<string | undefined>()
 
-  const checkAuthentication = async (key?: string) => {
+  const checkAuthentication = async (key?: string): Promise<boolean> => {
     isLoading.value = true
-    let response: ValidationResponse
+    errorMessage.value = undefined
+    localStorage.removeItem('tmp_auth_token')
+    localStorage.removeItem('tmp_auth_to')
 
     try {
-      const storedToken = localStorage.getItem('tmp_auth_token')
-      
-      if (storedToken) {
-        response = await validateToken(storedToken)
-      } else if (key) {
-        response = await validateKey(key)
-        console.log('Stored token:', response)
+      if (key) {
+        const response = await validateKey(key)
         if (response.success && response.data) {
-          localStorage.setItem('tmp_auth_token', response.data)
+          const token = response.data; // Assuming the response contains the token
+          localStorage.setItem('tmp_auth_token', token)
+          isAuthenticated.value = true
+          return true
         }
       } else {
-        throw new Error('No authentication credentials provided')
+        console.log('Key is missing');
       }
 
-      isAuthenticated.value = response.success
-      errorMessage.value = response.message
+      return false;
     } catch (error) {
       isAuthenticated.value = false
       errorMessage.value = error instanceof Error ? error.message : 'Authentication failed'
+      return false
     } finally {
       isLoading.value = false
     }
-
-    return isAuthenticated.value
   }
 
   const logout = () => {
