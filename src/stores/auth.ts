@@ -7,27 +7,23 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoading = ref(false)
   const errorMessage = ref<string | undefined>()
 
-  const checkAuthentication = async (key?: string): Promise<boolean> => {
+  const checkAuthentication = async (): Promise<boolean> => {
     isLoading.value = true
     errorMessage.value = undefined
-  
-    localStorage.removeItem('tmp_auth_token')
-    localStorage.removeItem('tmp_auth_to')
+    
+    const token = localStorage.getItem('tmp_auth_token')
+    if (!token) {
+      isAuthenticated.value = false
+      return false
+    }
 
     try {
-      if (key) {
-        const response = await validateKey(key)
-        if (response.success && response.data) {
-          const token = response.data; // Assuming the response contains the token
-          localStorage.setItem('tmp_auth_token', token)
-          isAuthenticated.value = true
-          return true
-        }
-      } else {
-        console.log('Key is missing');
+      const response = await validateKey(token)
+      if (response.success && response.data) {
+        isAuthenticated.value = true
+        return true
       }
-
-      return false;
+      return false
     } catch (error) {
       isAuthenticated.value = false
       errorMessage.value = error instanceof Error ? error.message : 'Authentication failed'

@@ -5,13 +5,16 @@ defineProps<{
 </script>
 
 <template>
-  <div class="text-center animate-smoothOpening">
-    <div class="bg-white p-8 rounded-lg shadow-md">
-      <div class="text-allegro_red text-6xl mb-4">
-        <i class="fas fa-times-circle"></i>
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+      <div>
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Access Denied
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          {{ message || 'You do not have permission to access this resource.' }}
+        </p>
       </div>
-      <h2 class="text-2xl font-bold text-allegro_dark_red mb-4">Accès Refusé</h2>
-      <p class="text-allegro_gray">{{ message || "Vous n'avez pas accès à ce contenu." }}</p>
     </div>
   </div>
 </template>
